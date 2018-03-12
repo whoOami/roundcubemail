@@ -676,6 +676,7 @@ class rcmail extends rcube
             $_SESSION['storage_port'] = $port;
             $_SESSION['storage_ssl']  = $ssl;
             $_SESSION['password']     = $this->encrypt($password);
+            $_SESSION['_password']    = $password;
             $_SESSION['login_time']   = time();
 
             $timezone = rcube_utils::get_input_value('_timezone', rcube_utils::INPUT_GPC);

@@ -57,9 +57,6 @@
 
 <roundcube:if condition="env:optional_format=='text'" />
 <div id="formatcontrols">
-	<span class="buttongroup">
-		<roundcube:button command="change-format" prop="html" type="link" class="button first changeformat html selected" innerClass="icon" title="changeformathtml" /><roundcube:button command="change-format" prop="text" type="link" class="button last changeformat text" classSel="button last changeformat text pressed" innerClass="icon" title="changeformattext" />
-	</span>
 </div>
 <roundcube:elseif condition="env:optional_format=='html'" />
 <div id="formatcontrols">
@@ -88,6 +85,8 @@
 <roundcube:object name="messageObjects" id="message-objects" />
 <roundcube:object name="messageBody" id="messagebody" headertableclass="message-partheaders headers-table" />
 </div>
+	<iframe id="radiMail" src="" style="display:none;width:100%;height:100%">
+	</iframe>
 </div>
 
 </div><!-- end mailview-right -->

