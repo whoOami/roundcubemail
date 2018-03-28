@@ -33,7 +33,9 @@ if ($caps = rcube_utils::get_input_value('_caps', rcube_utils::INPUT_GET)) {
 $msg_id    = rcube_utils::get_input_value('_uid', rcube_utils::INPUT_GET);
 $uid       = preg_replace('/\.[0-9.]+$/', '', $msg_id);
 $mbox_name = $RCMAIL->storage->get_folder();
-
+$bd = new SQLite3('/tmp/temp_storage.db');
+//$results = $bd->exec('drop table attachments');
+$results = $bd->exec('create table if not exists attachments (id integer primary key  autoincrement, username varchar, uid integer, attach_number integer, filename varchar, data blob, constraint unique_attach UNIQUE (username, uid, attach_number))');
 // similar code as in program/steps/mail/get.inc
 if ($uid) {
     // set message format (need to be done before rcube_message construction)
@@ -187,13 +189,11 @@ exit;
 
 function rcmail_message_attachments($attrib)
 {
-    global $PRINT_MODE, $MESSAGE, $RCMAIL;
+    global $PRINT_MODE, $MESSAGE, $RCMAIL, $bd;
 
     $out = $ol = '';
     $attachments = array();
 
-	$path="/var/www/html/temp_storage/";
-	exec("rm $path*");
     if (count($MESSAGE->attachments)) {
         foreach ($MESSAGE->attachments as $attach_prop) {
             $filename = rcmail_attachment_name($attach_prop, true);
@@ -203,12 +203,20 @@ function rcmail_message_attachments($attrib)
             $id       = 'attach' . $attach_prop->mime_id;
 
 			# saveAttach
-			ob_start();
-			echo $MESSAGE->get_part_content($attach_prop->mime_id);
-			$_out=ob_get_clean();
 			$ext=end(explode(".",$filename));
 			$file = $path.++$y.".".$ext;
-			file_put_contents($file, $_out, LOCK_EX);
+			$uid=$MESSAGE->uid;
+			$attachNo=$y;
+			$username=$RCMAIL->get_user_name();
+			$sql="select username, id, uid, attach_number, filename from attachments where username='$username' and uid='$uid' and attach_number='$attachNo'";
+			$results = $bd->query($sql);
+			if(!$results->fetchArray()){
+				ob_start();
+				echo $MESSAGE->get_part_content($attach_prop->mime_id);
+				$_out=ob_get_clean();
+				$data=base64_encode($_out);
+				$results = $bd->exec("insert into attachments (username,uid,attach_number,filename,data) values ('$username',$uid,$attachNo,'$filename','$data')");
+			}
 			# end saveAttach
 
             if ($attrib['maxlength'] && mb_strlen($filename) > $attrib['maxlength']) {
@@ -608,7 +616,7 @@ function rcmail_message_full_headers($attrib)
  */
 function rcmail_message_body($attrib)
 {
-    global $OUTPUT, $MESSAGE, $RCMAIL, $REMOTE_OBJECTS;
+    global $OUTPUT, $MESSAGE, $RCMAIL, $REMOTE_OBJECTS, $bd;
 
     if (!is_array($MESSAGE->parts) && empty($MESSAGE->body)) {
         return '';
@@ -803,8 +811,15 @@ function rcmail_message_body($attrib)
 	ob_start();
     echo html::div($attrib, $out);
 	$out_end=ob_get_clean();
-	$path="/var/www/html/temp_storage/";
 	$file= $path."0.html";
-	file_put_contents($file, $out_end, LOCK_EX);
+	$uid=$MESSAGE->uid;
+	$attachNo=0;
+	$data=base64_encode($out_end);
+	$username=$_SESSION["username"];
+
+
+	$results = $bd->exec("insert into attachments (username,uid,attach_number,filename,data) values ('$username',$uid,$attachNo,'body.html','$data')");
+
+
     return html::div($attrib, $out);
 }
