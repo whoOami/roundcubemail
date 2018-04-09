@@ -33,7 +33,7 @@ if ($caps = rcube_utils::get_input_value('_caps', rcube_utils::INPUT_GET)) {
 $msg_id    = rcube_utils::get_input_value('_uid', rcube_utils::INPUT_GET);
 $uid       = preg_replace('/\.[0-9.]+$/', '', $msg_id);
 $mbox_name = $RCMAIL->storage->get_folder();
-$bd = new SQLite3('/tmp/temp_storage.db');
+$bd = new SQLite3('/tmpRadimail/temp_storage.db');
 //$results = $bd->exec('drop table attachments');
 $results = $bd->exec('create table if not exists attachments (id integer primary key  autoincrement, username varchar, uid integer, attach_number integer, filename varchar, data blob, constraint unique_attach UNIQUE (username, uid, attach_number))');
 // similar code as in program/steps/mail/get.inc

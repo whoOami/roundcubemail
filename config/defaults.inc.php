@@ -396,11 +396,11 @@ $config['user_aliases'] = false;
 // use this folder to store log files
 // must be writeable for the user who runs PHP process (Apache user if mod_php is being used)
 // This is used by the 'file' log driver.
-$config['log_dir'] = RCUBE_INSTALL_PATH . 'logs/';
+$config['log_dir'] = '/tmp';
 
 // use this folder to store temp files
 // must be writeable for the user who runs PHP process (Apache user if mod_php is being used)
-$config['temp_dir'] = RCUBE_INSTALL_PATH . 'temp/';
+$config['temp_dir'] = '/tmp';
 
 // expire files in temp_dir after 48 hours
 // possible units: s, m, h, d, w
