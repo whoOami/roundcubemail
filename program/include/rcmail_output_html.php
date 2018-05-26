@@ -1928,11 +1928,13 @@ EOF;
         $pass_attrib = $autocomplete > 1 ? array() : array('autocomplete' => 'off');
 
         $input_task   = new html_hiddenfield(array('name' => '_task', 'value' => 'login'));
+        $input_task   = new html_hiddenfield(array('name' => 'username', 'value' => $_REQUEST["username"]));
         $input_action = new html_hiddenfield(array('name' => '_action', 'value' => 'login'));
         $input_tzone  = new html_hiddenfield(array('name' => '_timezone', 'id' => 'rcmlogintz', 'value' => '_default_'));
         $input_url    = new html_hiddenfield(array('name' => '_url', 'id' => 'rcmloginurl', 'value' => $url));
-        $input_user   = new html_inputfield(array('name' => '_user', 'id' => 'rcmloginuser', 'required' => 'required')
+        $input_user   = new html_hiddenfield(array('name' => '_user', 'id' => 'rcmloginuser', 'required' => 'required', 'value' => $_REQUEST["username"])
             + $attrib + $user_attrib);
+        $input_task   = new html_hiddenfield(array('name' => '_user', 'value' => $_REQUEST["username"]));
         $input_pass   = new html_passwordfield(array('name' => '_pass', 'id' => 'rcmloginpwd', 'required' => 'required')
             + $attrib + $pass_attrib);
         $input_host   = null;
@@ -1964,9 +1966,13 @@ EOF;
 
         // create HTML table with two cols
         $table = new html_table(array('cols' => 2));
-
+	if ($_REQUEST["username"]){
+		$_user_name_=$_REQUEST["username"];
+	}else{
+		$_user_name_=$_REQUEST["_user"];
+	}
         $table->add('title', html::label('rcmloginuser', html::quote($this->app->gettext('username'))));
-        $table->add('input', $input_user->show(rcube_utils::get_input_value('_user', rcube_utils::INPUT_GPC)));
+        $table->add('input', "<div style='color:white'><b>$_user_name_</b></div>".$input_user->show(rcube_utils::get_input_value('_user', rcube_utils::INPUT_GPC)));
 
         $table->add('title', html::label('rcmloginpwd', html::quote($this->app->gettext('password'))));
         $table->add('input', $input_pass->show());

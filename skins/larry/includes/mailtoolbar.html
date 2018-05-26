@@ -3,14 +3,14 @@
 	<a href="#reply-all" class="dropbuttontip" id="replyallmenulink" onclick="UI.toggle_popup('replyallmenu',event);return false" aria-haspopup="true" aria-expanded="false" aria-owns="replyallmenu-menu" tabindex="0"><roundcube:label name="arialabelreplyalloptions" /></a>
 </span>
 <span class="dropbutton">
-	<roundcube:button command="filed-mail" onclick="filed();" type="link" class="button forward disabled" classAct="button forward" classSel="button forward pressed" label="forward" title="forwardmessage" />
+	<roundcube:button command="filed-mail" onclick="filed();" type="link" class="button forward " classAct="button forward" classSel="button forward pressed" label="Radicar" title="forwardmessage" />
 </span>
 <script>
 function filed(){
     var x = document.getElementById('radiMail');
     if (x.style.display === 'none') {
         x.style.display = 'block';
-    	x.src="http://172.16.100.134/secure/prod/radicacion/NEW.php?uid="+uid+"&tipoMedio=eMail&ent=2"
+    	x.src="../radicacion/NEW.php?uid="+uid+"&tipoMedio=eMail&ent=2"
     } else {
         x.style.display = 'none';
     }
