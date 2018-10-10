@@ -3,7 +3,7 @@
 	<a href="#reply-all" class="dropbuttontip" id="replyallmenulink" onclick="UI.toggle_popup('replyallmenu',event);return false" aria-haspopup="true" aria-expanded="false" aria-owns="replyallmenu-menu" tabindex="0"><roundcube:label name="arialabelreplyalloptions" /></a>
 </span>
 <span class="dropbutton">
-	<roundcube:button command="filed-mail" onclick="filed();" type="link" class="button forward disabled" classAct="button forward" classSel="button forward pressed" label="forward" title="forwardmessage" />
+	<roundcube:button command="filed-mail" onclick="filed();" type="link" class="button forward" classAct="button forward" classSel="button forward pressed" label="forward" title="forwardmessage" />
 </span>
 <script>
 function filed(){
@@ -16,7 +16,7 @@ function filed(){
     }
 }
 </script>
-<roundcube:button command="delete" type="link" class="button delete disabled" classAct="button delete" classSel="button delete pressed" label="delete" title="deletemessage" />
+<roundcube:button command="delete" type="link" class="button delete " classAct="button delete" classSel="button delete pressed" label="delete" title="deletemessage" />
 <roundcube:button command="move" type="link" class="button move" classAct="button move" classSel="button move pressed" label="move" title="movemessage" />
 <roundcube:container name="toolbar" id="mailtoolbar" />
 
